@@ -1,0 +1,44 @@
+- name: Install zsh
+  ansible.builtin.package:
+    name:
+      - zsh
+    state: present
+
+- name: Change user shell to zsh
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /bin/zsh
+
+- name: Create zim configuration directory
+  ansible.builtin.file:
+    path: ~/.zim/
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0700"
+    state: directory
+  register: zim_configuration_directory
+
+- name: Install latest zim version
+  ansible.builtin.uri:
+    url: https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+    dest: "{{ zim_configuration_directory.path }}/zimfw.zsh"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0600"
+    status_code:
+      - 200
+      # NOTE: 304 is "not modified" (file already in cache
+      - 304
+
+- name: Create configuration files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0600"
+  loop:
+    - src: "files/.zshrc"
+      dest: "~/.zshrc"
+    - src: "files/.zimrc"
+      dest: "~/.zimrc"
