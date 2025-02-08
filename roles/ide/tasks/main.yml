@@ -1,13 +1,8 @@
-- name: Install zsh
+- name: Install zed editor
   ansible.builtin.package:
     name:
       - zed
     state: present
-
-- name: Change user shell to zsh
-  ansible.builtin.user:
-    name: "{{ ansible_user_id }}"
-    shell: /bin/zsh
 
 - name: Create zed configuration directory
   ansible.builtin.file:
