@@ -32,6 +32,47 @@
       - python-psutil
     state: present
 
+- name: Remove unused Gnome packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - yelp
+      - totem
+      - sushi
+      - simple-scan
+      - rygel
+      - orca
+      - malcontent
+      - gvfs-afc
+      - gvfs-google
+      - gvfs-wsdd
+      - gvfs-onedrive
+      - gvfs-nfs
+      - gvfs-smb
+      - gvfs-wsdd
+      - grilo
+      - grilo-plugins
+      - gnome-clocks
+      - gnome-weather
+      - gnome-user-share
+      - gnome-user-docs
+      - gnome-tour
+      - gnome-text-editor
+      - gnome-software
+      - gnome-remote-desktop
+      - gnome-music
+      - gnome-maps
+      - gnome-font-viewer
+      - gnome-characters
+      - gnome-console
+      - gnome-connections
+      - gnome-backgrounds
+      - gvfs-dnssd
+      - gvfs-google
+      - gvfs-gphoto2
+      - gvfs-onedrive
+    state: absent
+
 - name: Enable gdm
   become: true
   ansible.builtin.systemd_service:
