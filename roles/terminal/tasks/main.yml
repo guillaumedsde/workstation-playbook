@@ -1,0 +1,32 @@
+- name: Install alacritty
+  ansible.builtin.package:
+    name:
+      - alacritty
+    state: present
+
+- name: Create alacritty configuration directory
+  ansible.builtin.file:
+    path: ~/.config/alacritty
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0700"
+    state: directory
+  register: alacritty_configuration_directory
+
+- name: Download Alacritty theme
+  ansible.builtin.uri:
+    url: https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/papercolor_light.toml
+    dest: "{{ alacritty_configuration_directory.path }}/papercolor_light.toml"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0600"
+    status_code:
+      - 200
+
+- name: Create configuration files
+  ansible.builtin.copy:
+    src: "files/alacritty.toml"
+    dest: "{{ alacritty_configuration_directory.path }}/alacritty.toml"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0600"
