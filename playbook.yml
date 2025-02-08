@@ -1,0 +1,5 @@
+- name: Workstation playbook
+  hosts: localhost
+  roles:
+    - role: shell
+    - role: terminal
