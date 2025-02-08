@@ -1,0 +1,64 @@
+- name: Install Gnome packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - baobab
+      - evince
+      - gdm
+      - gnome-calculator
+      - gnome-calendar
+      - gnome-color-manager
+      - gnome-contacts
+      - gnome-control-center
+      - gnome-disk-utility
+      - gnome-keyring
+      - gnome-logs
+      - gnome-menus
+      - gnome-session
+      - gnome-settings-daemon
+      - gnome-shell
+      - gnome-shell-extensions
+      - gnome-system-monitor
+      - gvfs
+      - gvfs-dnssd
+      - gvfs-goa
+      - loupe
+      - nautilus
+      - snapshot
+      - xdg-desktop-portal-gnome
+      - xdg-user-dirs-gtk
+      - papirus-icon-theme
+      - ttf-fira-code
+      # NOTE: required for Ansible dconf module
+      - python-psutil
+    state: present
+
+- name: Enable gdm
+  become: true
+  ansible.builtin.systemd_service:
+    name: gdm.service
+    enabled: true
+
+- name: Disable avahi-daemon
+  become: true
+  ansible.builtin.systemd_service:
+    name: avahi-daemon
+    enabled: false
+    state: stopped
+
+- name: Gnome dconf configuration
+  vars:
+    # NOTE: need to single quote special characters
+    dconf_key_values:
+      "/org/gnome/desktop/interface/icon-theme": "'Papirus'"
+      "/org/gnome/desktop/interface/gtk-theme": "'Adwaita'"
+      "/org/gnome/desktop/interface/color-scheme": "'prefer-light'"
+      "/org/gnome/desktop/wm/preferences/button-layout": "'appmenu:minimize,maximize,close'"
+      "/org/gnome/desktop/interface/enable-hot-corners": "false"
+      "/org/gnome/desktop/interface/monospace-font-name": "'Fira Code'"
+      "/org/gnome/mutter/workspaces-only-on-primary": "false"
+  community.general.dconf:
+    key: "{{ item.key | string }}"
+    value: "{{ item.value | string }}"
+    state: present
+  with_items: "{{ dconf_key_values | dict2items }}"
