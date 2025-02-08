@@ -1,4 +1,5 @@
 - name: Install zed editor
+  become: true
   ansible.builtin.package:
     name:
       - zed
