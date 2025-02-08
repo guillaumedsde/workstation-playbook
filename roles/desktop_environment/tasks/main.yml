@@ -36,10 +36,12 @@
   become: true
   ansible.builtin.package:
     name:
+      - eog
       - yelp
       - totem
       - sushi
       - simple-scan
+      - shotwell
       - rygel
       - orca
       - malcontent
@@ -53,18 +55,19 @@
       - grilo
       - grilo-plugins
       - gnome-clocks
+      - gnome-console
       - gnome-weather
       - gnome-user-share
       - gnome-user-docs
       - gnome-tour
       - gnome-text-editor
+      - gnome-terminal
       - gnome-software
       - gnome-remote-desktop
       - gnome-music
       - gnome-maps
       - gnome-font-viewer
       - gnome-characters
-      - gnome-console
       - gnome-connections
       - gnome-backgrounds
       - gvfs-dnssd
