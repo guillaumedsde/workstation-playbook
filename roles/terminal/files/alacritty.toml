@@ -1,7 +1,6 @@
-[general]
-import = ["papercolor_light.toml"]
+# NOTE: Catpuccin-latte theme, see:
+#       https://github.com/catppuccin/alacritty/blob/f6cb5a5c2b404cdaceaff193b9c52317f62c62f7/catppuccin-latte.toml
 
-# Colors (PaperColor - Light)
 # Default colors
 [colors.primary]
 background = '#eeeeee'
