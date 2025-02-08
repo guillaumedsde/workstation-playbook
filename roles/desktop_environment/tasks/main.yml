@@ -20,7 +20,6 @@
       - gnome-shell-extensions
       - gnome-system-monitor
       - gvfs
-      - gvfs-dnssd
       - gvfs-goa
       - loupe
       - nautilus
