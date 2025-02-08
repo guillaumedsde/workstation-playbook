@@ -1,0 +1,59 @@
+{
+  "auto_update": false,
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "features": {
+    "inline_completion_provider": "none"
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 15.0,
+  "theme": {
+    "mode": "light",
+    "light": "One Light",
+    "dark": "One Light"
+  },
+  "file_types": {
+    "Ansible": [
+      "**.ansible.yml",
+      "**/defaults/**.yml",
+      "**/defaults/**.yaml",
+      "**/meta/**.yml",
+      "**/meta/**.yaml",
+      "**/tasks/**.yml",
+      "**/tasks/*.yml",
+      "**/tasks/*.yaml",
+      "**/handlers/*.yml",
+      "**/handlers/*.yaml",
+      "**/group_vars/**.yml",
+      "**/group_vars/**.yaml",
+      "**/roles/**.yml",
+      "**/roles/**.yaml",
+      "**playbook*.yaml",
+      "**playbook*.yml"
+    ]
+  },
+  "lsp": {
+    "ansible-language-server": {
+      "settings": {
+        "ansible": {
+          "path": "ansible"
+        },
+        "executionEnvironment": {
+          "enabled": false
+        },
+        "python": {
+          "interpreterPath": "python3"
+        },
+        "validation": {
+          "enabled": true,
+          "lint": {
+            "enabled": true,
+            "path": "ansible-lint"
+          }
+        }
+      }
+    }
+  }
+}

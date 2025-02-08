@@ -1,0 +1,27 @@
+- name: Install zsh
+  ansible.builtin.package:
+    name:
+      - zed
+    state: present
+
+- name: Change user shell to zsh
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /bin/zsh
+
+- name: Create zed configuration directory
+  ansible.builtin.file:
+    path: ~/.config/zed/
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0700"
+    state: directory
+  register: zed_configuration_directory
+
+- name: Create configuration files
+  ansible.builtin.copy:
+    src: "files/settings.json"
+    dest: "{{ zed_configuration_directory.path }}/settings.json"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0600"
