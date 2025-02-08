@@ -21,23 +21,6 @@
     group: "{{ ansible_user_id }}"
     mode: "0600"
 
-- name: Create zed themes directory
-  ansible.builtin.file:
-    path: "{{ zed_configuration_directory.path }}/themes"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-    mode: "0700"
-    state: directory
-  register: zed_themes_directory
-
-- name: Copy zed theme file
-  ansible.builtin.copy:
-    src: "files/catppuccin.json"
-    dest: "{{ zed_themes_directory.path }}/catppuccin.json"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-    mode: "0600"
-
 - name: Create environment.d user configuration directory
   ansible.builtin.file:
     path: ~/.config/environment.d/
