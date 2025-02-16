@@ -3,7 +3,7 @@
   ansible.builtin.package:
     name:
       - alacritty
-    state: present
+    update_cache: true
 
 - name: Create alacritty configuration directory
   ansible.builtin.file:

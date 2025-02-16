@@ -1,10 +1,10 @@
 - name: Install Gnome packages
   become: true
-  ansible.builtin.package:
-    name:
+  vars:
+    common_packages:
       - baobab
       - evince
-      - gdm
+      - file-roller
       - gnome-calculator
       - gnome-calendar
       - gnome-color-manager
@@ -20,16 +20,34 @@
       - gnome-shell-extensions
       - gnome-system-monitor
       - gvfs
-      - gvfs-goa
-      - loupe
       - nautilus
-      - snapshot
       - xdg-desktop-portal-gnome
       - xdg-user-dirs-gtk
       - papirus-icon-theme
-      - ttf-fira-code
-      # NOTE: required for Ansible dconf module
-      - python-psutil
+    ansible_distribution_specific_packages:
+      Archlinux:
+        - gdm
+        - loupe
+        # NOTE: arch splis gvfs package into modules, we only install the one we want
+        - gvfs-goa
+        - ttf-fira-code
+        # NOTE: required for Ansible dconf module
+        - python-psutil
+      Debian:
+        - gdm3
+        # TODO: replace with loupe once available
+        - gnome-photos
+        - fonts-firacode
+        # NOTE: required for Ansible dconf module
+        - python3-psutil
+      Ubuntu:
+        - gdm3
+        - loupe
+        - fonts-firacode
+        # NOTE: required for Ansible dconf module
+        - python3-psutil
+  ansible.builtin.package:
+    name: "{{ common_packages + ansible_distribution_specific_packages[ansible_distribution] }}"
     state: present
 
 - name: Remove unused Gnome packages
@@ -70,6 +88,7 @@
       - gnome-characters
       - gnome-connections
       - gnome-backgrounds
+      - gnome-snapshot
       - gvfs-dnssd
       - gvfs-google
       - gvfs-gphoto2
@@ -78,8 +97,13 @@
 
 - name: Enable gdm
   become: true
+  vars:
+    distribution_specific_gdm_service_name:
+      Archlinux: gdm
+      Debian: gdm3
+      Ubuntu: gdm3
   ansible.builtin.systemd_service:
-    name: gdm.service
+    name: "{{ distribution_specific_gdm_service_name[ansible_distribution] }}.service"
     enabled: true
 
 - name: Disable avahi-daemon
@@ -96,10 +120,15 @@
       "/org/gnome/desktop/interface/icon-theme": "'Papirus'"
       "/org/gnome/desktop/interface/gtk-theme": "'Adwaita'"
       "/org/gnome/desktop/interface/color-scheme": "'prefer-light'"
-      "/org/gnome/desktop/wm/preferences/button-layout": "'appmenu:minimize,maximize,close'"
       "/org/gnome/desktop/interface/enable-hot-corners": "false"
       "/org/gnome/desktop/interface/monospace-font-name": "'Fira Code'"
+      "/org/gnome/desktop/interface/clock-show-seconds": "true"
+      "/org/gnome/desktop/interface/clock-show-weekday": "true"
+      "/org/gnome/desktop/wm/preferences/button-layout": "'appmenu:minimize,maximize,close'"
+      "/org/gnome/desktop/media-handling/autorun-never": "true"
+      "/org/gnome/settings-daemon/plugins/media-keys": "['<Control>m']"
       "/org/gnome/mutter/workspaces-only-on-primary": "false"
+      "/system/locale/region": "'fr_FR.UTF-8'"
   community.general.dconf:
     key: "{{ item.key | string }}"
     value: "{{ item.value | string }}"

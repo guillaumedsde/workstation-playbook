@@ -3,9 +3,10 @@
   ansible.builtin.package:
     name:
       - zsh
-    state: present
+    update_cache: true
 
 - name: Change user shell to zsh
+  become: true
   ansible.builtin.user:
     name: "{{ ansible_user_id }}"
     shell: /bin/zsh

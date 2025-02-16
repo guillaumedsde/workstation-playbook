@@ -1,9 +1,28 @@
-- name: Install zed editor
+- name: Set distribution_has_zed_package fact
+  ansible.builtin.set_fact:
+    distribution_has_zed_package: "{{ ansible_distribution in ['Archlinux'] }}"
+
+- name: Install zed editor from package
   become: true
   ansible.builtin.package:
     name:
       - zed
-    state: present
+    update_cache: true
+  when: distribution_has_zed_package
+
+- name: Install zed editor from Github Releases archive
+  when: not distribution_has_zed_package
+  become: true
+  ansible.builtin.unarchive:
+    src: https://github.com/zed-industries/zed/releases/download/v0.173.10/zed-linux-x86_64.tar.gz
+    remote_src: true
+    dest: "/usr/local/"
+    owner: "root"
+    group: "root"
+    creates: "/usr/local/bin/zed"
+    extra_opts:
+      - '--strip-components=1'
+      - '--show-stored-names'
 
 - name: Create zed configuration directory
   ansible.builtin.file:
