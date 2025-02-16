@@ -1,0 +1,15 @@
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Install pacman keyring
+      when: ansible_distribution == 'Archlinux'
+      become: true
+      ansible.builtin.package:
+        name:
+          - gnupg
+          - archlinux-keyring
+        state: latest # noqa: package-latest
+
+
+- name: Apply playbook for testing
+  ansible.builtin.import_playbook: ../../playbook.yml

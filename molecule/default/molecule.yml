@@ -1,0 +1,22 @@
+driver:
+  name: vagrant
+
+platforms:
+  - &base-plateform
+    name: archlinux
+    box: archlinux/archlinux
+    cpus: 2
+    memory: 2048
+  - <<: *base-plateform
+    name: bookworm
+    box: debian/bookworm64
+  - <<: *base-plateform
+    name: noble
+    box: bento/ubuntu-24.04
+
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      remote_tmp: /tmp
+      roles_path: "../../roles"

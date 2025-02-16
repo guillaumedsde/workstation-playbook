@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "workstation-playbook"
+version = "0.1.0"
+description = ""
+authors = ["guillaumedsde <30023543+guillaumedsde@users.noreply.github.com>"]
+license = "MIT"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+ansible = "11.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ansible-lint = { version = "25.1.2", markers = 'platform_system != "Windows"' }
+
+[tool.poetry.group.test.dependencies]
+molecule-plugins = { extras = ["vagrant"], version = "23.7.0" }
+molecule = "25.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
