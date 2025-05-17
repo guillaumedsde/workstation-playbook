@@ -10,12 +10,12 @@
 ```bash
 sudo -i
 mkdir -p /etc/Nitrokey
-chmod 700 /etc/Nitrokey
+chmod 755 /etc/Nitrokey
 # NOTE: insert first nitrokey
-pamu2fcfg --username architect --pin-verification --resident > /etc/Nitrokey/u2f_keys
+pamu2fcfg --username architect --pin-verification > /etc/Nitrokey/u2f_keys
 # NOTE: insert second nitrokey
-pamu2fcfg --nouser --pin-verification --resident >> /etc/Nitrokey/u2f_keys
-chmod 600 /etc/Nitrokey/u2f_keys
+pamu2fcfg --nouser --pin-verification >> /etc/Nitrokey/u2f_keys
+chmod 644 /etc/Nitrokey/u2f_keys
 ```
 
 ## Configure PAM
