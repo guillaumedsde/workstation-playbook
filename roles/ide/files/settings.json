@@ -11,7 +11,7 @@
   "ui_font_size": 16,
   "buffer_font_size": 15.0,
   "buffer_font_family": "Fira Code",
-  "theme": "Catppuccin Latte",
+  "theme": "Ayu Light",
   "file_types": {
     "Ansible": [
       "**.ansible.yml",
@@ -31,6 +31,25 @@
       "**playbook*.yaml",
       "**playbook*.yml"
     ]
+  },
+  "languages": {
+    "Python": {
+      "language_servers": ["pyright", "ruff"],
+      "format_on_save": "on",
+      "formatter": [
+        {
+          "code_actions": {
+            "source.fixAll.ruff": true,
+            "source.organizeImports.ruff": true
+          }
+        },
+        {
+          "language_server": {
+            "name": "ruff"
+          }
+        }
+      ]
+    }
   },
   "lsp": {
     "ansible-language-server": {
