@@ -1,0 +1,59 @@
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name:
+      - libfido2
+      # GPG
+      - gnupg
+      - pcsc-tools
+      - libusb-compat
+      - pcsclite
+      - ccid
+      # Nitrokey
+      - python-pynitrokey
+      - libnitrokey
+      - nitrokey-udev-rules
+    state: present
+
+- name: Create .gnupg directory
+  ansible.builtin.file:
+    path: ~/.gnupg
+    mode: "0700"
+    state: directory
+  register: gnupg_directory
+
+- name: Disable CCID
+  ansible.builtin.copy:
+    dest: "{{ gnupg_directory.path }}/scdaemon.conf"
+    mode: "0600"
+    content: |
+      disable-ccid
+
+- name: PCDSC user systemd unit
+  become: true
+  ansible.builtin.systemd_service:
+    name: pcscd.service
+    state: started
+    enabled: true
+
+- name: Create gpg.conf
+  ansible.builtin.copy:
+    dest: "{{ gnupg_directory.path }}/gpg.conf"
+    mode: "0600"
+    content: |
+      use-agent
+
+- name: Create ~/.config/environment.d
+  ansible.builtin.file:
+    path: ~/.config/environment.d
+    mode: "0700"
+    state: directory
+  register: environment_d_directory
+
+- name: Configure GPG SSH agent
+  ansible.builtin.copy:
+    dest: "{{ environment_d_directory.path }}/gpg-ssh-agent.conf"
+    mode: "0600"
+    content: |
+      SSH_AGENT_PID=""
+      SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"

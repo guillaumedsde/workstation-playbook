@@ -5,3 +5,4 @@
     - role: terminal
     - role: ide
     - role: desktop_environment
+    - role: nitrokey
