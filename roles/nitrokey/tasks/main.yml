@@ -43,6 +43,13 @@
     content: |
       use-agent
 
+- name: Create gpg.conf
+  ansible.builtin.copy:
+    dest: "{{ gnupg_directory.path }}/gpg-agent.conf"
+    mode: "0600"
+    content: |
+      pinentry-program /usr/bin/pinentry-gtk
+
 - name: Create ~/.config/environment.d
   ansible.builtin.file:
     path: ~/.config/environment.d
