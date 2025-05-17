@@ -61,7 +61,7 @@ bindkey "^[[1;5D" backward-word
 
 # NOTE: delete words, see: https://unix.stackexchange.comfez/a/583783
 bindkey '^H' backward-kill-word
-bindkey '^[[3;5~' kill-word
+bindkey '5~' kill-word
 
 # NOTE: zim, see: https://zimfw.sh/docs/install/
 ZIM_HOME=~/.zim
