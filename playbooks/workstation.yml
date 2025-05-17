@@ -1,5 +1,5 @@
 - name: Workstation playbook
-  hosts: localhost
+  hosts: jarvis
   roles:
     - role: shell
     - role: terminal

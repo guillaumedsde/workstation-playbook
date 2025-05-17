@@ -1,0 +1,5 @@
+ungrouped:
+  hosts:
+    jarvis:
+      ansible_connection: local
+      ansible_user: architect
