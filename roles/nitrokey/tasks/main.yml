@@ -58,9 +58,23 @@
       SSH_AGENT_PID=""
       SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"
 
-- name: Disable Gnome SSH agent
+- name: Disable user Gnome SSH agent
   ansible.builtin.systemd_service:
-    name: gcr-ssh-agent.socket
+    name: "{{ item }}"
     scope: user
     state: stopped
     enabled: false
+  loop:
+    - gcr-ssh-agent.socket
+    - gcr-ssh-agent.service
+
+- name: Disable global Gnome SSH agent
+  become: true
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    scope: global
+    state: stopped
+    enabled: false
+  loop:
+    - gcr-ssh-agent.socket
+    - gcr-ssh-agent.service
