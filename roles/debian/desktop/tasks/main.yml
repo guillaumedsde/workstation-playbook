@@ -6,8 +6,6 @@
       - gdm3
       - gnome-core
       - network-manager
-      - firefox-esr
-      - webext-ublock-origin-firefox
       - chromium
       - webext-ublock-origin-chromium
       - vlc
