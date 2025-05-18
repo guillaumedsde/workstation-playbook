@@ -1,0 +1,85 @@
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    update_cache: true
+    name:
+      - gdm3
+      - gnome-core
+      - network-manager
+      - firefox-esr
+      - webext-ublock-origin-firefox
+      - chromium
+      - webext-ublock-origin-chromium
+      - vlc
+      - papirus-icon-theme
+
+- name: NetworkManager configuration
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/NetworkManager/conf.d/unmanaged-interfaces.conf
+    mode: "0644"
+    owner: root
+    group: root
+    content: |
+      [ifupdown]
+      managed=true
+
+- name: Configure dconf
+  community.general.dconf:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    - key: "/org/gnome/desktop/lockdown/disable-lock-screen"
+      value: true
+    - key: "/org/gnome/desktop/privacy/report-technical-problems"
+      value: false
+    - key: "/org/gnome/desktop/privacy/send-software-usage-stats"
+      value: false
+    - key: "/org/gnome/desktop/remote-desktop/rdp/enable"
+      value: false
+    - key: "/org/gnome/desktop/wm/preferences/button-layout"
+      value: "'appmenu:minimize,maximize,close'"
+    - key: "/org/gnome/desktop/interface/enable-hot-corners"
+      value: false
+    - key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-type"
+      value: "'suspend'"
+    - key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-timeout"
+      value: 1200
+    - key: "/org/gnome/desktop/interface/color-scheme"
+      value: "'prefer-dark'"
+    - key: "/org/gnome/desktop/interface/icon-theme"
+      value: "'Papirus-Dark'"
+    - key: "/org/gnome/system/locale"
+      value: "'en_US.UTF-8'"
+    # FIXME: seems like this is an invalid value
+    # - key: "/org/gnome/desktop/input-sources/sources"
+    #   value: "[('xkb', 'fr+azerty')]"
+
+- name: GDM automatic login
+  become: true
+  ansible.builtin.copy:
+    dest: "/etc/gdm3/daemon.conf"
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [daemon]
+      AutomaticLoginEnable=true
+      AutomaticLogin={{ ansible_user_id }}
+
+- name: Desktop services
+  become: true
+  ansible.builtin.systemd_service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  loop:
+    - name: gdm
+      state: started
+      enabled: true
+    - name: NetworkManager
+      state: started
+      enabled: true
+    - name: avahi-daemon
+      state: stopped
+      enabled: false

@@ -3,3 +3,6 @@ ungrouped:
     jarvis:
       ansible_connection: local
       ansible_user: architect
+    walle:
+      ansible_user: architect
+      ansible_host: walle.lan

@@ -1,0 +1,16 @@
+- name: Add debian repo
+  become: true
+  ansible.builtin.deb822_repository:
+    name: jellyfin
+    uris: https://repo.jellyfin.org/debian
+    suites:
+      - "{{ ansible_distribution_release }}"
+    components:
+      - main
+    signed_by: https://repo.jellyfin.org/jellyfin_team.gpg.key
+
+- name: Install jellyfin-media-player
+  become: true
+  ansible.builtin.package:
+    update_cache: true
+    name: jellyfin-media-player

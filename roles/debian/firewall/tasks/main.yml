@@ -1,0 +1,12 @@
+- name: Install ufw
+  become: true
+  ansible.builtin.package:
+    update_cache: true
+    name: ufw
+
+- name: Enable firewall, allow SSH traffic
+  community.general.ufw:
+    state: enabled
+    rule: allow
+    port: '22'
+    proto: tcp

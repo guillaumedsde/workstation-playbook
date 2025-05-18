@@ -1,0 +1,44 @@
+- name: Set locales
+  become: true
+  ansible.builtin.template:
+    src: locale.gen.j2
+    dest: "/etc/locale.gen"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "Reconfigure locales"
+  become: true
+  changed_when: false
+  ansible.builtin.command:
+    argv:
+      - dpkg-reconfigure
+      - locales
+      - -f
+      - noninteractive
+
+- name: Generate locales
+  become: true
+  community.general.locale_gen:
+    name: "{{ item }}.{{ encoding }}"
+    state: present
+  loop: "{{ locales }}"
+
+- name: Create user config directory
+  ansible.builtin.file:
+    state: directory
+    path: ~/.config/
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0700"
+  register: user_config_directory
+
+- name: Set user locale
+  ansible.builtin.copy:
+    dest: "{{ user_config_directory.path }}/locale.conf"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: "0600"
+    content: |
+      LANG={{ locales[0] }}.{{ encoding }}
+      LANGUAGE={{ locales[0] }}:{{ locales[0] | split('_') | first }}

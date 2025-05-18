@@ -1,0 +1,26 @@
+- name: Add debian repo
+  become: true
+  ansible.builtin.deb822_repository:
+    name: firefox
+    uris: https://packages.mozilla.org/apt
+    suites:
+      - mozilla
+    components:
+      - main
+    signed_by: https://packages.mozilla.org/apt/repo-signing-key.gpg
+
+- name: Pin Firefox from Mozilla repository
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/apt/preferences.d/mozilla
+    mode: "0644"
+    content: |
+      Package: *
+      Pin: origin packages.mozilla.org
+      Pin-Priority: 1000
+
+- name: Install firefox
+  become: true
+  ansible.builtin.package:
+    update_cache: true
+    name: firefox

@@ -1,0 +1,54 @@
+- name: Unattended upgrades
+  become: true
+  vars:
+    unattended_automatic_reboot: true
+    unattended_install_on_shutdown: true
+    unattended_systemd_timer_override: true
+    unattended_remove_unused_dependencies: true
+    unattended_remove_unused_kernel_packages: true
+  ansible.builtin.import_role:
+    name: hifis.unattended-upgrades
+
+- name: Unattended upgrades download timer overrides directory
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: /etc/systemd/system/apt-daily.timer.d
+    owner: root
+    group: root
+    mode: "0755"
+  register: unattended_upgrade_download_timer_override_dir
+
+- name: Unattended upgrades download timer overrides directory
+  become: true
+  ansible.builtin.copy:
+    dest: "{{ unattended_upgrade_download_timer_override_dir.path }}/wake_override.conf"
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [Timer]
+      WakeSystem=true
+      Persistent=false
+
+- name: Unattended upgrades timer overrides directory
+  become: true
+  ansible.builtin.file:
+    state: directory
+    path: /etc/systemd/system/apt-daily-upgrade.timer.d
+    owner: root
+    group: root
+    mode: "0755"
+  register: unattended_upgrade_timer_override_dir
+
+- name: Unattended upgrades timer overrides directory
+  become: true
+  ansible.builtin.copy:
+    dest: "{{ unattended_upgrade_timer_override_dir.path }}/wake_override.conf"
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [Timer]
+      WakeSystem=true
+      Persistent=false
