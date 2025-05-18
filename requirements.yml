@@ -1,0 +1,8 @@
+roles:
+  - name: hifis.unattended-upgrades
+    version: "v3.3.0"
+
+collections:
+  # Install a collection from Ansible Galaxy.
+  - name: devsec.hardening
+    version: "10.3.0"
