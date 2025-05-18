@@ -53,6 +53,8 @@
           - sudo
           - bash-completion
           - python-is-python3
+          # NOTE: apps
+          - dolphin-emu
           - qbittorrent
     - name: Desktop role
       ansible.builtin.import_role:
