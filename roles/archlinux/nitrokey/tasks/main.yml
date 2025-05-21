@@ -80,7 +80,6 @@
   ansible.builtin.systemd_service:
     name: "{{ item }}"
     scope: global
-    state: stopped
     enabled: false
   loop:
     - gcr-ssh-agent.socket
