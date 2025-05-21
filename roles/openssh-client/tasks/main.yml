@@ -1,8 +1,9 @@
 - name: Configure SSH hosts
   community.general.ssh_config:
     host: gauf.fr
+    hostname: gauf.fr
     port: 1968
     user: architect
     other_options:
       requesttty: "yes"
-      remotecommande: "tmux new -A -s foobar"
+      remotecommand: "tmux new -A -s foobar"
