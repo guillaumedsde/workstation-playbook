@@ -1,0 +1,23 @@
+- name: Configure SSH hosts
+  community.general.git_config:
+    scope: global
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  loop:
+    - name: user.name
+      value: guillaumedsde
+    - name: user.email
+      value: 30023543+guillaumedsde@users.noreply.github.com
+    - name: user.signingkey
+      value: 0626F278A70869E9BFBA22E129E561B74C33C1C9
+    - name: commit.gpgsign
+      value: "True"
+    - name: core.excludesfile
+      value: ~/.gitignore
+
+- name: Configure user gitignore
+  ansible.builtin.copy:
+    dest: ~/.gitignore
+    mode: "0600"
+    content: |
+      .vscode/

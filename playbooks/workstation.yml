@@ -4,6 +4,7 @@
     - role: shell
     - role: terminal
     - role: openssh-client
+    - role: git
     - role: ide
     - role: desktop_environment
     - role: nitrokey
