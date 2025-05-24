@@ -19,10 +19,18 @@
     path: ~/.config/firejail
     state: directory
     mode: "0700"
-  register: firejail_user_configuratin_directory
+  register: firejail_user_configuration_directory
 
 - name: Firejail pacman hook
   ansible.builtin.copy:
     src: files/profiles/
-    dest: "{{ firejail_user_configuratin_directory.path }}/"
+    dest: "{{ firejail_user_configuration_directory.path }}/"
     mode: "0600"
+  register: firejail_pacman_hook
+
+- name: Firecfg
+  become: true
+  when: firejail_pacman_hook.changed
+  ansible.builtin.command:
+    argv:
+      - firecfg
