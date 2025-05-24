@@ -1,0 +1,28 @@
+- name: Firejail pacman hook
+  become: true
+  ansible.builtin.copy:
+    src: files/firejail.hook
+    dest: "/etc/pacman.d/hooks/firejail.hook"
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Install firejail
+  become: true
+  ansible.builtin.package:
+    name:
+      - firejail
+    state: present
+
+- name: Firejail configuration directory
+  ansible.builtin.file:
+    path: ~/.config/firejail
+    state: directory
+    mode: "0700"
+  register: firejail_user_configuratin_directory
+
+- name: Firejail pacman hook
+  ansible.builtin.copy:
+    src: files/profiles/
+    dest: "{{ firejail_user_configuratin_directory.path }}/"
+    mode: "0600"

@@ -8,3 +8,4 @@
     - role: ide
     - role: desktop_environment
     - role: nitrokey
+    - role: firejail
