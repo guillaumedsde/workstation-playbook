@@ -1,0 +1,20 @@
+- name: Enable 32-bit support
+  become: true
+  changed_when: false
+  ansible.builtin.command:
+    argv:
+      - dpkg
+      - --add-architecture
+      - i386
+
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    update_cache: true
+    name:
+      - steam-installer
+      - steam-devices
+      - mesa-vulkan-drivers
+      - libglx-mesa0:i386
+      - mesa-vulkan-drivers:i386
+      - libgl1-mesa-dri:i386

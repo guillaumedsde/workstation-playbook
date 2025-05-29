@@ -94,6 +94,11 @@
         name: xone
       tags:
         - xone
+    - name: Steam
+      ansible.builtin.import_role:
+        name: steam
+      tags:
+        - steam
     # NOTE: not supported on Debian 13 yet
     # - name: jellyfin_media_player
     #   ansible.builtin.import_role:
