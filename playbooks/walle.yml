@@ -33,6 +33,7 @@
       community.general.timezone:
         name: Europe/Paris
     - name: Create Game SSDs mount directories
+      become: true
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -43,6 +44,7 @@
         - "/mnt/games1"
         - "/mnt/games2"
     - name: Configure Game SSDs
+      become: true
       ansible.posix.mount:
         path: "{{ item.mountpoint }}"
         src: "/dev/disk/by-id/{{ item.disk_id }}"
