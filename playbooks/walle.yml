@@ -32,6 +32,28 @@
       become: true
       community.general.timezone:
         name: Europe/Paris
+    - name: Create Game SSDs mount directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+        mode: "0755"
+      loop:
+        - "/mnt/games1"
+        - "/mnt/games2"
+    - name: Configure Game SSDs
+      ansible.posix.mount:
+        path: "{{ item.mountpoint }}"
+        src: "/dev/disk/by-id/{{ item.disk_id }}"
+        fstype: ext4
+        opts: noatime
+        state: mounted
+      loop:
+        - disk_id: "ata-Samsung_SSD_840_EVO_250GB_S1DBNSBF108933T-part1"
+          mountpoint: "/mnt/games1"
+        - disk_id: "ata-KINGSTON_SA400S37120G_50026B778205EA72-part1"
+          mountpoint: "/mnt/games2"
     - name: Install packages
       become: true
       ansible.builtin.package:
