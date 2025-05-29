@@ -13,6 +13,8 @@
       - python-pynitrokey
       - libnitrokey
       - nitrokey-udev-rules
+      # Desktop integration
+      - yubikey-touch-detector
     state: present
 
 - name: Create .gnupg directory
@@ -64,6 +66,37 @@
     content: |
       SSH_AGENT_PID=""
       SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"
+
+- name: Create ~/.config/yubikey-touch-detector
+  ansible.builtin.file:
+    path: ~/.config/yubikey-touch-detector
+    mode: "0700"
+    state: directory
+  register: yubikey_touch_detector_config_dir
+
+- name: Configure yubikey-touch-detector
+  ansible.builtin.copy:
+    dest: "{{ yubikey_touch_detector_config_dir.path }}/service.conf"
+    mode: "0600"
+    content: |
+      # enable debug logging
+      YUBIKEY_TOUCH_DETECTOR_VERBOSE=false
+
+      # show desktop notifications using libnotify
+      YUBIKEY_TOUCH_DETECTOR_LIBNOTIFY=true
+
+      # do not print notifications to stdout
+      YUBIKEY_TOUCH_DETECTOR_STDOUT=false
+
+      # disable Un*x socket notifier
+      YUBIKEY_TOUCH_DETECTOR_NOSOCKET=false
+
+- name: Enable yubikey-touch-detector service
+  ansible.builtin.systemd_service:
+    name: "yubikey-touch-detector"
+    scope: user
+    state: started
+    enabled: true
 
 - name: Disable user Gnome SSH agent
   ansible.builtin.systemd_service:
