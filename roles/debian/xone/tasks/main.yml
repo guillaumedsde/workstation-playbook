@@ -1,4 +1,5 @@
 - name: "Install build requirements"
+  become: true
   ansible.builtin.package:
     update_cache: true
     name:
@@ -10,6 +11,7 @@
       - curl
 
 - name: Clone xone repository
+  become: true
   ansible.builtin.git:
     repo: "https://github.com/dlundqvist/xone.git"
     dest: "/usr/src/xone-{{ xone_version }}"
@@ -18,6 +20,7 @@
     force: true
 
 - name: "Get current xone version"
+  become: true
   ansible.builtin.shell:
     cmd: |
       set -o pipefail
@@ -30,6 +33,7 @@
     current_xone_version: "{{ get_current_xone_version.stdout }}"
 
 - name: Install/update Xone
+  become: true
   when: "current_xone_version != xone_version"
   block:
 
@@ -57,6 +61,7 @@
         creates: /lib/firmware/xow_dongle.bin
 
 - name: UDEV rule for logo brightness
+  become: true
   ansible.builtin.copy:
     dest: /etc/udev/rules.d/50-xone.rules
     mode: "0644"
