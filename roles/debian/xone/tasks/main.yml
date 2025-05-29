@@ -1,0 +1,64 @@
+- name: "Install build requirements"
+  ansible.builtin.package:
+    update_cache: true
+    name:
+      - build-essential
+      - git
+      - cabextract
+      - curl
+
+- name: Clone xone repository
+  ansible.builtin.git:
+    repo: "https://github.com/medusalix/xone.git"
+    dest: "/usr/src/xone-{{ xone_version }}"
+    version: "{{ xone_version }}"
+    depth: 1
+    force: true
+
+- name: "Get current xone version"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      dkms status xone | head -n 1 | tr -s ',:/' ' ' | cut -d ' ' -f 2
+    executable: /bin/bash
+  register: get_current_xone_version
+
+- name: Set current xone version fact
+  ansible.builtin.set_fact:
+    current_xone_version: "{{ get_current_xone_version.stdout }}"
+
+- name: Install/update Xone
+  when: "current_xone_version != xone_version"
+  block:
+
+    - name: Uninstall pre-existing xone
+      ansible.builtin.command:
+        chdir: "/usr/src/xone-{{ xone_version }}"
+        cmd: ./uninstall.sh
+
+    - name: Install xone kernel module
+      ansible.builtin.shell:
+        chdir: "/usr/src/xone-{{ xone_version }}"
+        cmd: |
+          find . -type f \( -name dkms.conf -o -name '*.c' \) -exec sed -i "s/#VERSION#/{{ xone_version }}/" {} +
+          dkms install -m xone -v "{{ xone_version }}"
+          install -D -m 644 install/modprobe.conf /etc/modprobe.d/xone-blacklist.conf
+          install -D -m 755 install/firmware.sh /usr/local/bin/xone-get-firmware.sh
+        # NOTE: check xone kernel module is installed
+        # FIXME: this check should be done for the currently running linux kernel version
+        creates: "/var/lib/dkms/xone/{{ xone_version }}/*-amd64/x86_64/module/xone-dongle.ko"
+
+    - name: Download xone dongle firmware
+      ansible.builtin.command:
+        chdir: "/usr/src/xone-{{ xone_version }}"
+        cmd: xone-get-firmware.sh --skip-disclaimer
+        creates: /lib/firmware/xow_dongle.bin
+
+- name: UDEV rule for logo brightness
+  ansible.builtin.copy:
+    dest: /etc/udev/rules.d/50-xone.rules
+    mode: "0644"
+    owner: root
+    group: root
+    content: |
+      ACTION=="add", SUBSYSTEM=="leds", KERNEL=
