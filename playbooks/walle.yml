@@ -67,6 +67,11 @@
     - name: Shell
       ansible.builtin.import_role:
         name: shell
+    - name: Xone
+      ansible.builtin.import_role:
+        name: xone
+      tags:
+        - xone
     # NOTE: not supported on Debian 13 yet
     # - name: jellyfin_media_player
     #   ansible.builtin.import_role:
