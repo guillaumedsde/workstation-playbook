@@ -9,7 +9,7 @@
 
 - name: Clone xone repository
   ansible.builtin.git:
-    repo: "https://github.com/medusalix/xone.git"
+    repo: "https://github.com/dlundqvist/xone.git"
     dest: "/usr/src/xone-{{ xone_version }}"
     version: "{{ xone_version }}"
     depth: 1
