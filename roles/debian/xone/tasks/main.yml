@@ -2,6 +2,8 @@
   ansible.builtin.package:
     update_cache: true
     name:
+      - linux-headers-amd64
+      - dkms
       - build-essential
       - git
       - cabextract
