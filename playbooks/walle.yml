@@ -18,6 +18,8 @@
       become: true
       ansible.builtin.import_role:
         name: devsec.hardening.ssh_hardening
+      tags:
+        - hardening
     - name: Firewall
       become: true
       ansible.builtin.import_role:
