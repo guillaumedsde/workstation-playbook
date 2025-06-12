@@ -15,6 +15,8 @@
       - nitrokey-udev-rules
       # Desktop integration
       - yubikey-touch-detector
+      # PIV support
+      - python-pyscard
     state: present
 
 - name: Create .gnupg directory
