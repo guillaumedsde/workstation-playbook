@@ -21,7 +21,12 @@
     mode: "0700"
   register: firejail_user_configuration_directory
 
-- name: Firejail pacman hook
+- name: Remove Firejail local profiles
+  ansible.builtin.file:
+    path: "{{ firejail_user_configuration_directory.path }}/*.profile"
+    state: absent
+
+- name: Copy firejail local overrides
   ansible.builtin.copy:
     src: files/profiles/
     dest: "{{ firejail_user_configuration_directory.path }}/"

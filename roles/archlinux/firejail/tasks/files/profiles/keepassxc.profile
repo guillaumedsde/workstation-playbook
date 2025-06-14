@@ -1,1 +1,0 @@
-noblacklist ${HOME}/**/*.kdbx

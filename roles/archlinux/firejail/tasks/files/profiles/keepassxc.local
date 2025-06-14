@@ -1,0 +1,2 @@
+noblacklist ~/Nextcloud
+noblacklist ${RUNUSER}/app
